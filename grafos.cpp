@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "Logger.h"
+#include "Parser.h"
 
 #define MAX 10
 #define INF 999
@@ -24,7 +25,7 @@ struct tnode {
 
 typedef struct tnode node;
 
-int parseXML(FILE *xml, char aliases[][MAX_NOME], int idalias[], node *nos[MAX], Logger l);
+int parseXML(const char *path, char aliases[][MAX_NOME], int idalias[], node *nos[MAX], Logger l);
 void getBetweenTags(FILE *fd, char *dest);
 void skipChars(FILE *fd, int n);
 
@@ -35,7 +36,7 @@ void printPath(node *nos[MAX], int path[MAX], int dest, int peso);
 
 int main() {
 	Logger l;
-	l.setLevel(info);
+	l.setLevel(config);
 	//l.logString("This is being logged as fine!", fine);
 	//l.logString("This is being logged as info!", info);
 	//l.logString("This is being logged as error!", error);
@@ -48,13 +49,13 @@ int main() {
 	char aliases[NNOS][MAX_NOME];
 	int  idalias[NNOS];
 
-	FILE *xml = fopen("db.xml", "r");
-	if (!xml) {
-		l.logString("Error loading XML, is it really there? (/db.xml)", error);
-		exit(0);
-	}
+	//FILE *xml = fopen("db.xml", "r");
+	//if (!xml) {
+		//l.logString("Error loading XML, is it really there? (/db.xml)", error);
+		//exit(0);
+	//}
 	
-	int POIs = parseXML(xml, aliases, idalias, nos, l);
+	int POIs = parseXML("db.xml", aliases, idalias, nos, l);
 	
 	int path[MAX];
 	int pesoTotal;
@@ -93,15 +94,25 @@ int main() {
 	return 0;
 }
 
-int parseXML(FILE *xml, char aliases[][MAX_NOME], int adalias[], node *nos[MAX], Logger l) {
+int parseXML(const char *path, char aliases[][MAX_NOME], int adalias[], node *nos[MAX], Logger l) {
 	int aliases_pointer = 0;
 	int cid, cto, cpeso;
 	int cont_rua;
-	char cval[MAX_NOME], cchar;
-	while (!feof(xml)) {
-		fscanf(xml, "<node>\n");
-		fscanf(xml, "\t<id>%d</id>\n", &cid);
-		getBetweenTags(xml, cval);
+	char cval[MAX_NOME], cchar, c;
+	
+	//int count = 2;
+	
+	Parser p;
+	//p.xml = xml;
+	//p.setXML(xml);
+	p.loadXML(path);
+	while (!p.peof()) {
+		p.skipStr("<node>\n");
+		//fscanf(xml, "\t<id>%d</id>\n", &cid);
+		cid = p.nextInt("id", 1);
+		//l.logString("Got current ID", config);
+		//getBetweenTags(xml, cval);
+		p.nextString(cval, "nome");
 		
 		sprintf(l.buffer, "Got node %d - %s", cid, cval);
 		l.logB(config);
@@ -112,43 +123,58 @@ int parseXML(FILE *xml, char aliases[][MAX_NOME], int adalias[], node *nos[MAX],
 			aliases_pointer++;
 		}
 		
-		fscanf(xml, "\t<conns>\n");
-		fscanf(xml, "\t\t<rua>\n");
+		//fscanf(xml, "\t<conns>\n");
+		//fscanf(xml, "\t\t<rua>\n");
+		p.skipStr("\t<conns>\n\t\t<rua>\n");
+		
 		cont_rua = 1;
 		
 		while (cont_rua) {
-			fscanf(xml, "\t\t\t<id>%d</id>\n", &cto);
-			fscanf(xml, "\t\t\t<peso>%d</peso>\n", &cpeso);
-			fscanf(xml, "\t\t\t");
+			//fscanf(xml, "\t\t\t<id>%d</id>\n", &cto);
+			cto = p.nextInt("id", 3);
+			//fscanf(xml, "\t\t\t<peso>%d</peso>\n", &cpeso);
+			cpeso = p.nextInt("peso", 3);
+			//fscanf(xml, "\t\t\t");
+			p.skipStr("\t\t\t");
 			
-			getBetweenTags(xml, cval);
+			//getBetweenTags(xml, cval);
+			p.nextString(cval, "nome");
+			
 			insert(nos, cid, cto, cpeso, cval);
 			
 			sprintf(l.buffer,"\tInserting from %d to %d, weighed %d, named %s", cid, cto, cpeso, cval);
 			l.logB(config);
 			
-			skipChars(xml, 10);
+			p.skipStr("\t\t</rua>\n\t");
 			//fscanf(xml, "\t\t</rua>\n");
 			//fscanf(xml, "\t%c", &cchar);
-			fscanf(xml, "%c", &cchar);
+			//fscanf(xml, "%c", &cchar);
+			cchar = p.getChar();
 			if (cchar == '<') { 
 				cont_rua = 0; 
 				sprintf(l.buffer, "\t\tNo more conns (%c)", cchar);
 				l.logB(config);
 			} else {
-				skipChars(xml, 6);
+				//skipChars(xml, 6);
+				p.skipStr("<rua>\n");
 				//fscanf(xml, "<rua>\n");
 				sprintf(l.buffer, "\t\tGot another conn");
 				l.logB(config);
 			}
 		}
-		fscanf(xml, "/conns>\n");
-		fscanf(xml, "</node>\n");
+		l.logString("\t\tFinished getting conns...", config);
+		//if (p.skipStr("/conns>\n</node>\n") == -1) break;
+		p.skipStr("/conns>\n</node>\n");
+		c = p.getChar();
+		if (!p.peof()) p.ungetChar(c);
+		//printf("Foo is now %d\n", foo);
+		//fscanf(xml, "/conns>\n");
+		//fscanf(xml, "</node>\n");
 	}
-	
+	p.close();
 	return aliases_pointer;
 }
-
+/*
 void skipChars(FILE *fd, int n) {
 	char garb;
 	while (n) {
@@ -180,7 +206,7 @@ void getBetweenTags(FILE *fd, char *dest) {
 	while (curr != '\n') 
 		fscanf(fd, "%c", &curr);
 }
-
+*/
 void dij(node *nos[MAX], int orig, int dest, int path[], int *pd) {
 	int dist[MAX];
 	int corrente, i, k = 0, dc;
