@@ -15,7 +15,6 @@
 #define NNOS 50
 #define MAX_NOME 30
 
-#define LINUX
 struct tnode {
 	int no;
 	int peso;
@@ -34,9 +33,15 @@ void insert(node *nos[MAX], int pos, int conn, int peso, char nome[MAX_NOME]);
 int getPeso(node *nos[MAX], int from, int to);
 void printPath(node *nos[MAX], int path[MAX], int dest, int peso);
 
-int main() {
+int main(int argc, char *argv[]) {
 	Logger l;
-	l.setLevel(config);
+	if (argc > 1) {
+		int lv;
+		sscanf(argv[1], "%d", &lv);
+		l.setLevel((level) lv);
+	} else {
+		l.setLevel(info);
+	}
 	//l.logString("This is being logged as fine!", fine);
 	//l.logString("This is being logged as info!", info);
 	//l.logString("This is being logged as error!", error);
@@ -68,7 +73,7 @@ int main() {
 	for (i = 0; i < POIs; i++)
 		printf("\t\t%d. %s\n", i+1, aliases[i]);
 
-	printf("Digite a origem:  ");
+	printf("\nDigite a origem:  ");
 	scanf("%i", &orig);
 	
 	sprintf(l.buffer, "Orig was %d, now is %d", orig, idalias[orig - 1]);
@@ -174,39 +179,7 @@ int parseXML(const char *path, char aliases[][MAX_NOME], int adalias[], node *no
 	p.close();
 	return aliases_pointer;
 }
-/*
-void skipChars(FILE *fd, int n) {
-	char garb;
-	while (n) {
-		fscanf(fd, "%c", &garb);
-		n--;
-	}
-}
 
-void getBetweenTags(FILE *fd, char *dest) {
-	//int valid = 0;
-	int pos = 0;
-	char curr;
-	//char intag[MAX_NOME];
-	//char temp[MAX_NOME];
-	
-	//intag[0] = '<';
-	//intag[1] = '\0';
-	//strcpy(intag, tag);
-	//strcat(intag, ">");
-	while (curr != '>') 
-		fscanf(fd, "%c", &curr);
-		
-	while (curr != '<') {
-		fscanf(fd, "%c", &curr);
-		dest[pos++] = curr;
-	}
-	dest[pos - 1] = '\0';
-	
-	while (curr != '\n') 
-		fscanf(fd, "%c", &curr);
-}
-*/
 void dij(node *nos[MAX], int orig, int dest, int path[], int *pd) {
 	int dist[MAX];
 	int corrente, i, k = 0, dc;
@@ -296,7 +269,7 @@ void printPath(node *nos[MAX], int path[MAX], int dest, int peso) {
 	char last[MAX_NOME];
 	
 	int i = 0;
-	printf("\n");
+	printf("\n\tCaminho de menor peso (%d)\n", peso);
 	rev[0] = dest;
 	i = dest;
 	while (path[i] != -1) {
@@ -310,10 +283,11 @@ void printPath(node *nos[MAX], int path[MAX], int dest, int peso) {
 	while (point > 0) {
 		getNome(nos, rev[point], rev[point - 1], curr);
 		if (strcmp(curr, last)) {
-			printf("\t%d. %s\n", l, curr);
+			printf("\t\t%d. %s\n", l, curr);
 			l++;
 			strcpy(last, curr);
 		}
 		point--;
 	}
+	printf("\n");
 }
