@@ -2,18 +2,25 @@
 #include <stdio.h>
 #include <string.h>
 
-class Parser {
-	FILE *xml;
-public:
-	void setXML(FILE *rxml);
-	int loadXML(const char *path);
-	int nextInt(const char *tag, int tabs);
-	char getChar();
-	void ungetChar(char c);
-	void nextString(char *dest, const char *tag);
-	int skipChars(int n);
-	int skipStr(const char *str);
-	int peof();
-	int perr();
-	void close();
+#define CTAG 20
+#define CIMD 30
+
+enum xmlError { fileNotFound = 1, noMemory, wrongIndentation, wrongTag };
+enum xmlNodeType { parent = 0, immediate };
+
+struct tp {
+	char tag[CTAG];
+	xmlNodeType type;
+	struct tp *inside;
+	char immed[CIMD];
+	struct tp *next;
 };
+
+typedef struct tp xmlNode;
+
+xmlNode *start(const char *path);
+int readTag(FILE *xml, char *dest);
+xmlNode *createNewNode();
+xmlNode *parseXML(FILE *xml, const char *parentTag, int tabDepth, int *masterClose);
+void printHierarchy(xmlNode *current, int indentation);
+void throwErr(xmlError code);
