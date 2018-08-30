@@ -24,3 +24,7 @@ xmlNode *createNewNode();
 xmlNode *parseXML(FILE *xml, const char *parentTag, int tabDepth, int *masterClose);
 void printHierarchy(xmlNode *current, int indentation);
 void throwErr(xmlError code);
+
+int findTagInParent(xmlNode *parent, const char *tag, char *dest);
+int getIntTag(xmlNode *parent, const char *tag);
+xmlNode *findNestedParent(xmlNode *parent, const char *tag);

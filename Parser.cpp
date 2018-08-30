@@ -11,7 +11,7 @@ xmlNode *start(const char *path) {
 	if (!xml) throwErr(fileNotFound);
 	
 	xmlNode *toDelete = parseXML(xml, "", 0, &endLock); 
-	printf("Parsing complete [%s]\n", toDelete->tag);
+	//printf("Parsing complete [%s]\n", toDelete->tag);
 	xmlNode *toReturn = toDelete->inside; //Skip the master class XML
 	free(toDelete);
 	return toReturn;
@@ -137,4 +137,41 @@ void printHierarchy(xmlNode *current, int indentation) {
 		}
 		current = current->next;
 	}
+}
+
+int findTagInParent(xmlNode *parent, const char *tag, char *dest) {
+	xmlNode *current = parent->inside;
+	while (current) {
+		if (!strcmp(tag, current->tag)) { strcpy(dest, current->immed); return 0; }
+		current = current->next;
+	}
+	printf("Could not find tag %s in parent...\n", tag);
+	return -1;
+}
+
+int getIntTag(xmlNode *parent, const char *tag) {
+	char buffer[CIMD];
+	int res;
+	//printf("Current parent is of type %s...\n", parent->tag);
+	xmlNode *current = parent->inside;
+	while (current) {
+		if (!strcmp(tag, current->tag)) { 
+			strcpy(buffer, current->immed); 
+			sscanf(buffer, "%d", &res);
+			return res;
+		}
+		current = current->next;
+	}
+	printf("Could not find tag %s for int...\n", tag);
+	return -1;
+}
+
+xmlNode *findNestedParent(xmlNode *parent, const char *tag) {
+	xmlNode *current = parent->inside;
+	while (current) {
+		if (!strcmp(tag, current->tag)) { return current; }
+		current = current->next;
+	}
+	printf("Could not find tag %s for nested...\n", tag);
+	return NULL;
 }

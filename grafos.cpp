@@ -15,23 +15,23 @@
 #define NNOS 50
 #define MAX_NOME 30
 
-struct tnode {
-	int no;
-	int peso;
-	char nome[MAX_NOME];
-	struct tnode *prox;
-};
+//struct tnode {
+//	int no;
+//	int peso;
+//	char nome[MAX_NOME];
+//	struct tnode *prox;
+//};
 
-typedef struct tnode node;
+//typedef struct tnode node;
 
-int parseXML(const char *path, char aliases[][MAX_NOME], int idalias[], node *nos[MAX], Logger l);
-void getBetweenTags(FILE *fd, char *dest);
-void skipChars(FILE *fd, int n);
+//int parseXML(const char *path, char aliases[][MAX_NOME], int idalias[], node *nos[MAX], Logger l);
+//void getBetweenTags(FILE *fd, char *dest);
+//void skipChars(FILE *fd, int n);
 
-void dij(node *nos[MAX], int orig, int dest, int path[], int *pd);
-void insert(node *nos[MAX], int pos, int conn, int peso, char nome[MAX_NOME]);
-int getPeso(node *nos[MAX], int from, int to);
-void printPath(node *nos[MAX], int path[MAX], int dest, int peso);
+void dij(xmlNode *raiz, int orig, int dest, int path[], int *pd);
+void insert(xmlNode *raiz, int pos, int conn, int peso, char nome[MAX_NOME]);
+int getPeso(xmlNode *raiz, int from, int to);
+void printPath(xmlNode *raiz, int path[MAX], int dest, int peso);
 
 int main(int argc, char *argv[]) {
 	Logger l;
@@ -47,9 +47,9 @@ int main(int argc, char *argv[]) {
 	//l.logString("This is being logged as error!", error);
 	
 	//------------------------ Creating adjacency matrix ------------------------
-	node *nos[MAX];
-	for (int i = 0; i < MAX; i++)
-		nos[i] = NULL;
+	//node *nos[MAX];
+	//for (int i = 0; i < MAX; i++)
+	//	nos[i] = NULL;
 
 	char aliases[NNOS][MAX_NOME];
 	int  idalias[NNOS];
@@ -60,7 +60,20 @@ int main(int argc, char *argv[]) {
 		//exit(0);
 	//}
 	
-	int POIs = parseXML("db.xml", aliases, idalias, nos, l);
+	xmlNode *raiz = start("db.xml");
+	xmlNode *aux = raiz;
+	char buffer[CIMD];
+	int POIs = 0;
+	while (aux) {
+		findTagInParent(aux, "nome", buffer);
+		if (strcmp(buffer, "NULL")) {
+			strcpy(aliases[POIs], buffer);
+			findTagInParent(aux, "id", buffer);
+			sscanf(buffer, "%d", &(idalias[POIs++]));
+		}
+		aux = aux->next;
+	}
+	//int POIs = parseXML("db.xml", aliases, idalias, nos, l);
 	
 	int path[MAX];
 	int pesoTotal;
@@ -89,16 +102,17 @@ int main(int argc, char *argv[]) {
 	
 	dest = idalias[dest - 1];
 
-	dij(nos, orig, dest, path, &pesoTotal);
+	dij(raiz, orig, dest, path, &pesoTotal);
 
-	printPath(nos, path, dest, pesoTotal);
+	l.logString("Dijstra is done!", config);
+	printPath(raiz, path, dest, pesoTotal);
 
 	#ifndef LINUX
 	system("pause");
 	#endif
 	return 0;
 }
-
+/*
 int parseXML(const char *path, char aliases[][MAX_NOME], int adalias[], node *nos[MAX], Logger l) {
 	int aliases_pointer = 0;
 	int cid, cto, cpeso;
@@ -179,8 +193,8 @@ int parseXML(const char *path, char aliases[][MAX_NOME], int adalias[], node *no
 	p.close();
 	return aliases_pointer;
 }
-
-void dij(node *nos[MAX], int orig, int dest, int path[], int *pd) {
+*/
+void dij(xmlNode *raiz, int orig, int dest, int path[], int *pd) {
 	int dist[MAX];
 	int corrente, i, k = 0, dc;
 	int perm[MAX];
@@ -201,7 +215,7 @@ void dij(node *nos[MAX], int orig, int dest, int path[], int *pd) {
 		dc = dist[corrente];
 		for (i = 0; i < MAX; i++) {
 			if (perm[i] == NAOMEMBRO) {
-				novadist = dc + getPeso(nos, corrente, i);
+				novadist = dc + getPeso(raiz, corrente, i);
 				if (novadist < dist[i]) {
 					dist[i] = novadist;
 					path[i] = corrente;
@@ -218,6 +232,7 @@ void dij(node *nos[MAX], int orig, int dest, int path[], int *pd) {
 	*pd = dist[dest];
 }
 
+/*
 void insert(node *nos[MAX], int pos, int conn, int peso, char nome[MAX_NOME]) {
 	if (nos[pos]) {
 		node *atual = nos[pos];
@@ -237,31 +252,78 @@ void insert(node *nos[MAX], int pos, int conn, int peso, char nome[MAX_NOME]) {
 		nos[pos] = novo;
 	}
 }
+*/
 
-int getPeso(node *nos[MAX], int from, int to) {
-	node *atual = nos[from];
-	while (atual != NULL) {
-		if (atual->no == to) 
-			return atual->peso;
-		atual = atual->prox;
+int getPeso(xmlNode *raiz, int from, int to) {
+	xmlNode *aux = raiz;
+	int cfrom, cto;
+	char buffer[CIMD];
+	do {
+		cfrom = getIntTag(aux, "id");
+		if (cfrom != from) aux = aux->next;
+	} while (aux && cfrom != from);
+	
+	if (!aux) return INF; //Ideally this wouldnt happen if all nodes connections > 0
+	
+	aux = findNestedParent(aux, "conns")->inside;
+	
+	do {
+		cto = getIntTag(aux, "id");
+		if (cto != to) { aux = aux->next; }
+	} while (aux && cto != to);
+	
+	if (aux) {
+		int temp = getIntTag(aux, "peso");
+		//printf("Got weight = %d from %d to %d\n", temp, from, to);
+		return temp;
+	} else {
+		//printf("No connection!\n");
+		return INF;
 	}
-	return INF;
+	//node *atual = nos[from];
+	//while (atual != NULL) {
+	//	if (atual->no == to) 
+	//		return atual->peso;
+	//	atual = atual->prox;
+	//}
+	//return INF;
 }
 
-void getNome(node *nos[MAX], int from, int to, char dest[]) {
-	node *atual = nos[from];
-	while (atual != NULL) {
-		if (atual->no == to) {
-			strcpy(dest, atual->nome);
-			return;
-		}
-		atual = atual->prox;
+void getNome(xmlNode *raiz, int from, int to, char dest[]) {
+	xmlNode *aux = raiz;
+	int cfrom, cto;
+	char buffer[CIMD];
+	while (aux && cfrom != from) {
+		cfrom = getIntTag(aux, "id");
+		if (cfrom != from) aux = aux->next;
 	}
-	printf("Path invalid!\n");
-	exit(5); 
+	
+	aux = findNestedParent(aux, "conns")->inside;
+	while (aux && cto != to) {
+		cto = getIntTag(aux, "id");
+		if (cto != to) aux = aux->next;
+	}
+	
+	if (aux) {
+		//return getIntTag(aux, "peso");
+		findTagInParent(aux, "nome", dest);
+	} else {
+		printf("Path is invalid!\n");
+		exit(5);
+	}
+	//node *atual = nos[from];
+	//while (atual != NULL) {
+	//	if (atual->no == to) {
+	//		strcpy(dest, atual->nome);
+	//		return;
+	//	}
+	//	atual = atual->prox;
+	//}
+	//printf("Path invalid!\n");
+	//exit(5); 
 }
 
-void printPath(node *nos[MAX], int path[MAX], int dest, int peso) {
+void printPath(xmlNode *raiz, int path[MAX], int dest, int peso) {
 	int rev[MAX + 1];
 	int point = 1;
 
@@ -281,7 +343,7 @@ void printPath(node *nos[MAX], int path[MAX], int dest, int peso) {
 
 	int l = 1;
 	while (point > 0) {
-		getNome(nos, rev[point], rev[point - 1], curr);
+		getNome(raiz, rev[point], rev[point - 1], curr);
 		if (strcmp(curr, last)) {
 			printf("\t\t%d. %s\n", l, curr);
 			l++;
