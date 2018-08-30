@@ -17,10 +17,9 @@ xmlNode *start(const char *path) {
 	return toReturn;
 }
 
-int readTag(FILE *xml, char *dest, attribNode *attribs) { //Implement attribute reading here
+int readTag(FILE *xml, char *dest) {
 	char c, tag[CTAG];
-	
-	int isCloser = 0, cpointer = 0, tpointer = 0;
+	int isCloser = 0, cpointer = 0;
 	if ((c = fgetc(xml)) != '<') {
 		ungetc(c, xml);
 		return -1;
@@ -28,32 +27,8 @@ int readTag(FILE *xml, char *dest, attribNode *attribs) { //Implement attribute 
 	
 	c = fgetc(xml);
 	
-	int readingTags = 0;
-	
-	attribNode *current;
-	attribNode *first;
-
-	if (c == '/') { isCloser = 1; } else { dest[cpointer++] = c; } 
-	while ((c = fgetc(xml)) != '>') { 
-		if (!readingTags) {
-			if (c == ' ') {
-				readingTags = 1;
-			} else {
-				dest[cpointer++] = c; 
-			}
-		} else {
-			current = (attribNode*)malloc(sizeof(attribNode));
-			while ((c = fgetc(xml)) != '=') {
-				current->tag[tpointer++] = c;
-			}
-			current->tag[tpointer] = '\0';
-			if (c == ' ') { //Read new tag
-				
-			} else { //Keep reading new tag
-				
-			}
-		}
-	}
+	if (c == '/') { isCloser = 1; } else { dest[cpointer++] = c; }
+	while ((c = fgetc(xml)) != '>') { dest[cpointer++] = c; }
 	dest[cpointer] = '\0';
 	
 	return isCloser;
@@ -67,11 +42,10 @@ xmlNode *createNewNode() {
 
 xmlNode *parseXML(FILE *xml, const char *parentTag, int tabDepth, int *masterClose) {//const char *path) {
 	int i;
-	char c;
 	for (i = 0; i < tabDepth; i++) {
-		if ((c = fgetc(xml)) != '\t') { throwErr(wrongIndentation); }
+		if (fgetc(xml) != '\t') { throwErr(wrongIndentation); }
 	}
-	char current_tag[CTAG], closing_tag[CTAG];
+	char current_tag[CTAG], closing_tag[CTAG], c;
 	xmlNode *first;
 	int char_pos;
 	int tag_type = readTag(xml, current_tag);
@@ -83,7 +57,7 @@ xmlNode *parseXML(FILE *xml, const char *parentTag, int tabDepth, int *masterClo
 	
 	strcpy(current->tag, current_tag);
 	
-	while (!(*masterClose)) {
+	while (!(*masterClose)) { //Will probably fail in bad XMLs
 		if ((c = fgetc(xml)) == '\n') { //Is parent node
 			current->type = parent;
 			current->inside = parseXML( xml, current_tag, tabDepth + 1, masterClose );
