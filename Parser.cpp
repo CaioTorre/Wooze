@@ -17,7 +17,7 @@ xmlNode *start(const char *path) {
 	return toReturn;
 }
 
-int readTag(FILE *xml, char *dest) {
+int readTag(FILE *xml, char *dest) { //Implement attribute reading here
 	char c, tag[CTAG];
 	int isCloser = 0, cpointer = 0;
 	if ((c = fgetc(xml)) != '<') {
@@ -27,7 +27,7 @@ int readTag(FILE *xml, char *dest) {
 	
 	c = fgetc(xml);
 	
-	if (c == '/') { isCloser = 1; } else { dest[cpointer++] = c; }
+	if (c == '/') { isCloser = 1; } else { dest[cpointer++] = c; } 
 	while ((c = fgetc(xml)) != '>') { dest[cpointer++] = c; }
 	dest[cpointer] = '\0';
 	
@@ -42,10 +42,11 @@ xmlNode *createNewNode() {
 
 xmlNode *parseXML(FILE *xml, const char *parentTag, int tabDepth, int *masterClose) {//const char *path) {
 	int i;
+	char c;
 	for (i = 0; i < tabDepth; i++) {
-		if (fgetc(xml) != '\t') { throwErr(wrongIndentation); }
+		if ((c = fgetc(xml)) != '\t') { throwErr(wrongIndentation); }
 	}
-	char current_tag[CTAG], closing_tag[CTAG], c;
+	char current_tag[CTAG], closing_tag[CTAG];
 	xmlNode *first;
 	int char_pos;
 	int tag_type = readTag(xml, current_tag);
@@ -57,7 +58,7 @@ xmlNode *parseXML(FILE *xml, const char *parentTag, int tabDepth, int *masterClo
 	
 	strcpy(current->tag, current_tag);
 	
-	while (!(*masterClose)) { //Will probably fail in bad XMLs
+	while (!(*masterClose)) {
 		if ((c = fgetc(xml)) == '\n') { //Is parent node
 			current->type = parent;
 			current->inside = parseXML( xml, current_tag, tabDepth + 1, masterClose );

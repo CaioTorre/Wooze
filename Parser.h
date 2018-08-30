@@ -18,6 +18,14 @@ struct tp {
 
 typedef struct tp xmlNode;
 
+struct at {
+	char tag[CTAG];
+	char val[CIMD];
+	struct at *next;
+};
+
+typedef struct at attribNode;
+
 xmlNode *start(const char *path);
 int readTag(FILE *xml, char *dest);
 xmlNode *createNewNode();
