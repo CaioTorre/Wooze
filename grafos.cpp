@@ -28,7 +28,7 @@ void printPath(xmlNode *raiz, int path[MAX], int dest, int peso);
 
 int main(int argc, char *argv[]) {
 	#ifdef COMPACT_XML
-	printf("Using newest compact-style XML file\n");
+		printf("Using newest compact-style XML file\n");
 	#endif
 	Logger l;
 	if (argc > 1) {
@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
 	char aliases[NNOS][MAX_NOME];
 	int  idalias[NNOS];
 	
-	xmlNode *raiz = start("db2.xml");
+	xmlNode *raiz = start("db.xml");
 	xmlNode *aux = raiz;
 	char buffer[CIMD];
 	int POIs = 0;
@@ -151,11 +151,9 @@ void dij(xmlNode *raiz, int orig, int dest, int path[], int *pd) {
 }
 
 int cGetPeso(xmlNode *raiz, int from, int to) {
-	//printf("From %d to %d\n", from, to);
 	xmlNode *aux = raiz;
 	int cfrom, cto;
 	do {
-		//printf("Step from\n");
 		cfrom = getIntAtt(aux, "id");
 		if (cfrom != from) aux = aux->next; 
 	} while (aux && cfrom != from);
@@ -164,17 +162,13 @@ int cGetPeso(xmlNode *raiz, int from, int to) {
 	if (!aux) return INF; //If there are no roads starting at 'from'
 	
 	do {
-		//printf("Step to\n");
 		cto = getIntAtt(aux, "id");
 		if (cto != to) aux = aux->next;
 	} while (aux && cto != to);
 	
 	if (aux) {
 		int attempt = getIntAtt(aux, "peso");
-		if (attempt >= 0) { //printf("Got weight %d %d-%d\n", attempt, from, to); 
-			return attempt; 
-		}
-		//l.logString(warning, "Got a negative weight (probably a failed get)");
+		if (attempt >= 0) { return attempt; }
 		printf("Got a negative weight (probably a failed get)");
 		return INF;
 	}
