@@ -9,3 +9,8 @@ r:	dij.o
 
 clean:
 	rm dij.o
+
+test:
+	gcc -o test.o test.cpp Parser.cpp
+	./test.o $(SRC)
+	rm test.o

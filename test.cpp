@@ -3,9 +3,9 @@
 
 #include "Parser.h"
 
-int main() {
+int main(int argv, char *argc[]) {
 	printf("Iniciando...\n");
-	xmlNode *raiz = start("db.xml"); 
+	xmlNode *raiz = start(argc[1]); 
 	printf("XML avaliado com sucesso!\n\n");
 	printHierarchy(raiz, 0);
 	return 0;

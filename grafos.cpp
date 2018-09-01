@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
 		//exit(0);
 	//}
 	
-	xmlNode *raiz = start("db.xml");
+	xmlNode *raiz = start("db1.xml");
 	xmlNode *aux = raiz;
 	char buffer[CIMD];
 	int POIs = 0;
