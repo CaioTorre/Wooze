@@ -271,6 +271,26 @@ int findTagInParent(xmlNode *parent, const char *tag, char *dest) {
 	return -1;
 }
 
+int getIntAtt(xmlNode *node, const char *tag) {
+	attribNode *aux = node->attributes;
+	int t;
+	while (aux && strcmp(tag, aux->tag)) aux = aux->next;
+	if (!aux) throwErr(noSuchAttribute, tag); else {
+		sscanf(aux->val, "%d", &t);
+		return t;
+	}
+	return -1;
+}
+
+int getStrAtt(xmlNode *node, const char *tag, char dest[]) {
+	attribNode *aux = node->attributes;
+	while (aux && strcmp(tag, aux->tag)) aux = aux->next;
+	if (!aux) { throwErr(noSuchAttribute, tag); return 0; } else {
+		strcpy(dest, aux->val);
+		return 1;
+	} 
+}
+
 int getIntTag(xmlNode *parent, const char *tag) {
 	char buffer[CIMD];
 	int res;

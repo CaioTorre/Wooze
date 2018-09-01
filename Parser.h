@@ -5,7 +5,7 @@
 #define CTAG 20
 #define CIMD 30
 
-enum xmlError { fileNotFound = 1, noMemory, wrongIndentation, wrongTag, badAttributeTag, badAttributeVal };
+enum xmlError { fileNotFound = 1, noMemory, wrongIndentation, wrongTag, badAttributeTag, badAttributeVal, noSuchAttribute };
 enum xmlNodeType { parent = 0, immediate };
 
 struct at {
@@ -38,5 +38,7 @@ void throwErr(xmlError code);
 void throwErr(xmlError code, const char *aux_msg);
 
 int findTagInParent(xmlNode *parent, const char *tag, char *dest);
+int getStrAtt(xmlNode *node, const char *tag, char dest[]);
+int getIntAtt(xmlNode *node, const char *tag);
 int getIntTag(xmlNode *parent, const char *tag);
 xmlNode *findNestedParent(xmlNode *parent, const char *tag);

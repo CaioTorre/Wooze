@@ -1,7 +1,7 @@
 LINFLAG=-DLINUX
 
 dij.o: 
-	gcc -o dij.o $(LINFLAG) grafos.cpp Logger.cpp Parser.cpp
+	gcc -o dij.o -g $(LINFLAG) grafos.cpp Logger.cpp Parser.cpp
 
 r:	dij.o
 	./dij.o $(LOG)

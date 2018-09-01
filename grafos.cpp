@@ -1,5 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
+#define COMPACT_XML
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -15,25 +17,19 @@
 #define NNOS 50
 #define MAX_NOME 30
 
-//struct tnode {
-//	int no;
-//	int peso;
-//	char nome[MAX_NOME];
-//	struct tnode *prox;
-//};
-
-//typedef struct tnode node;
-
-//int parseXML(const char *path, char aliases[][MAX_NOME], int idalias[], node *nos[MAX], Logger l);
-//void getBetweenTags(FILE *fd, char *dest);
-//void skipChars(FILE *fd, int n);
-
 void dij(xmlNode *raiz, int orig, int dest, int path[], int *pd);
-void insert(xmlNode *raiz, int pos, int conn, int peso, char nome[MAX_NOME]);
+
 int getPeso(xmlNode *raiz, int from, int to);
+void getNome(xmlNode *raiz, int from, int to, char dest[]);
+int cGetPeso(xmlNode *raiz, int from, int to);
+int cGetNome(xmlNode *raiz, int from, int to, char dest[]);
+
 void printPath(xmlNode *raiz, int path[MAX], int dest, int peso);
 
 int main(int argc, char *argv[]) {
+	#ifdef COMPACT_XML
+	printf("Using newest compact-style XML file\n");
+	#endif
 	Logger l;
 	if (argc > 1) {
 		int lv;
@@ -42,28 +38,16 @@ int main(int argc, char *argv[]) {
 	} else {
 		l.setLevel(info);
 	}
-	//l.logString("This is being logged as fine!", fine);
-	//l.logString("This is being logged as info!", info);
-	//l.logString("This is being logged as error!", error);
 	
-	//------------------------ Creating adjacency matrix ------------------------
-	//node *nos[MAX];
-	//for (int i = 0; i < MAX; i++)
-	//	nos[i] = NULL;
-
 	char aliases[NNOS][MAX_NOME];
 	int  idalias[NNOS];
-
-	//FILE *xml = fopen("db.xml", "r");
-	//if (!xml) {
-		//l.logString("Error loading XML, is it really there? (/db.xml)", error);
-		//exit(0);
-	//}
 	
-	xmlNode *raiz = start("db1.xml");
+	xmlNode *raiz = start("db2.xml");
 	xmlNode *aux = raiz;
 	char buffer[CIMD];
 	int POIs = 0;
+	
+	#ifndef COMPACT_XML
 	while (aux) {
 		findTagInParent(aux, "nome", buffer);
 		if (strcmp(buffer, "NULL")) {
@@ -73,7 +57,18 @@ int main(int argc, char *argv[]) {
 		}
 		aux = aux->next;
 	}
-	//int POIs = parseXML("db.xml", aliases, idalias, nos, l);
+	#endif
+	
+	#ifdef COMPACT_XML
+	while (aux) {
+		getStrAtt(aux, "nome", buffer);
+		if (strcmp(buffer, "NULL")) {
+			strcpy(aliases[POIs], buffer);
+			idalias[POIs++] = getIntAtt(aux, "id");
+		}
+		aux = aux->next;
+	}
+	#endif
 	
 	int path[MAX];
 	int pesoTotal;
@@ -112,88 +107,7 @@ int main(int argc, char *argv[]) {
 	#endif
 	return 0;
 }
-/*
-int parseXML(const char *path, char aliases[][MAX_NOME], int adalias[], node *nos[MAX], Logger l) {
-	int aliases_pointer = 0;
-	int cid, cto, cpeso;
-	int cont_rua;
-	char cval[MAX_NOME], cchar, c;
-	
-	//int count = 2;
-	
-	Parser p;
-	//p.xml = xml;
-	//p.setXML(xml);
-	p.loadXML(path);
-	while (!p.peof()) {
-		p.skipStr("<node>\n");
-		//fscanf(xml, "\t<id>%d</id>\n", &cid);
-		cid = p.nextInt("id", 1);
-		//l.logString("Got current ID", config);
-		//getBetweenTags(xml, cval);
-		p.nextString(cval, "nome");
-		
-		sprintf(l.buffer, "Got node %d - %s", cid, cval);
-		l.logB(config);
-		
-		if (strcmp(cval, "NULL")) {
-			strcpy(aliases[aliases_pointer], cval);
-			adalias[aliases_pointer] = cid;
-			aliases_pointer++;
-		}
-		
-		//fscanf(xml, "\t<conns>\n");
-		//fscanf(xml, "\t\t<rua>\n");
-		p.skipStr("\t<conns>\n\t\t<rua>\n");
-		
-		cont_rua = 1;
-		
-		while (cont_rua) {
-			//fscanf(xml, "\t\t\t<id>%d</id>\n", &cto);
-			cto = p.nextInt("id", 3);
-			//fscanf(xml, "\t\t\t<peso>%d</peso>\n", &cpeso);
-			cpeso = p.nextInt("peso", 3);
-			//fscanf(xml, "\t\t\t");
-			p.skipStr("\t\t\t");
-			
-			//getBetweenTags(xml, cval);
-			p.nextString(cval, "nome");
-			
-			insert(nos, cid, cto, cpeso, cval);
-			
-			sprintf(l.buffer,"\tInserting from %d to %d, weighed %d, named %s", cid, cto, cpeso, cval);
-			l.logB(config);
-			
-			p.skipStr("\t\t</rua>\n\t");
-			//fscanf(xml, "\t\t</rua>\n");
-			//fscanf(xml, "\t%c", &cchar);
-			//fscanf(xml, "%c", &cchar);
-			cchar = p.getChar();
-			if (cchar == '<') { 
-				cont_rua = 0; 
-				sprintf(l.buffer, "\t\tNo more conns (%c)", cchar);
-				l.logB(config);
-			} else {
-				//skipChars(xml, 6);
-				p.skipStr("<rua>\n");
-				//fscanf(xml, "<rua>\n");
-				sprintf(l.buffer, "\t\tGot another conn");
-				l.logB(config);
-			}
-		}
-		l.logString("\t\tFinished getting conns...", config);
-		//if (p.skipStr("/conns>\n</node>\n") == -1) break;
-		p.skipStr("/conns>\n</node>\n");
-		c = p.getChar();
-		if (!p.peof()) p.ungetChar(c);
-		//printf("Foo is now %d\n", foo);
-		//fscanf(xml, "/conns>\n");
-		//fscanf(xml, "</node>\n");
-	}
-	p.close();
-	return aliases_pointer;
-}
-*/
+
 void dij(xmlNode *raiz, int orig, int dest, int path[], int *pd) {
 	int dist[MAX];
 	int corrente, i, k = 0, dc;
@@ -215,7 +129,11 @@ void dij(xmlNode *raiz, int orig, int dest, int path[], int *pd) {
 		dc = dist[corrente];
 		for (i = 0; i < MAX; i++) {
 			if (perm[i] == NAOMEMBRO) {
-				novadist = dc + getPeso(raiz, corrente, i);
+				#ifdef COMPACT_XML
+				novadist = dc + cGetPeso(raiz, corrente, i);
+				#else
+				novadist = dc +  getPeso(raiz, corrente, i);
+				#endif
 				if (novadist < dist[i]) {
 					dist[i] = novadist;
 					path[i] = corrente;
@@ -232,27 +150,37 @@ void dij(xmlNode *raiz, int orig, int dest, int path[], int *pd) {
 	*pd = dist[dest];
 }
 
-/*
-void insert(node *nos[MAX], int pos, int conn, int peso, char nome[MAX_NOME]) {
-	if (nos[pos]) {
-		node *atual = nos[pos];
-		while (atual->prox != NULL) atual = atual->prox;
-		node *novo = (node*)malloc(sizeof(node));
-		novo->no = conn;
-		novo->peso = peso;
-		strcpy(novo->nome, nome);
-		novo->prox = NULL;
-		atual->prox = novo;
-	} else {
-		node *novo = (node*)malloc(sizeof(node));
-		novo->no = conn;
-		novo->peso = peso;
-		strcpy(novo->nome, nome);
-		novo->prox = NULL;
-		nos[pos] = novo;
+int cGetPeso(xmlNode *raiz, int from, int to) {
+	//printf("From %d to %d\n", from, to);
+	xmlNode *aux = raiz;
+	int cfrom, cto;
+	do {
+		//printf("Step from\n");
+		cfrom = getIntAtt(aux, "id");
+		if (cfrom != from) aux = aux->next; 
+	} while (aux && cfrom != from);
+	
+	aux = aux->inside; //Get first road
+	if (!aux) return INF; //If there are no roads starting at 'from'
+	
+	do {
+		//printf("Step to\n");
+		cto = getIntAtt(aux, "id");
+		if (cto != to) aux = aux->next;
+	} while (aux && cto != to);
+	
+	if (aux) {
+		int attempt = getIntAtt(aux, "peso");
+		if (attempt >= 0) { //printf("Got weight %d %d-%d\n", attempt, from, to); 
+			return attempt; 
+		}
+		//l.logString(warning, "Got a negative weight (probably a failed get)");
+		printf("Got a negative weight (probably a failed get)");
+		return INF;
 	}
+	//printf("No aux\n");
+	return INF;
 }
-*/
 
 int getPeso(xmlNode *raiz, int from, int to) {
 	xmlNode *aux = raiz;
@@ -272,21 +200,34 @@ int getPeso(xmlNode *raiz, int from, int to) {
 		if (cto != to) { aux = aux->next; }
 	} while (aux && cto != to);
 	
+	if (aux) return getIntTag(aux, "peso");
+	return INF;
+}
+
+int cGetNome(xmlNode *raiz, int from, int to, char dest[]) {
+	xmlNode *aux = raiz;
+	int cfrom, cto;
+	do {
+		cfrom = getIntAtt(aux, "id");
+		if (cfrom != from) aux = aux->next;
+	} while (aux && cfrom != from);
+		
+	aux = aux->inside; //Get first road
+	if (!aux) return INF; //If there are no roads starting at 'from'
+	
+	do {
+		cto = getIntAtt(aux, "id");
+		if (cto != to) aux = aux->next;
+	} while (aux && cto != to);
+	
 	if (aux) {
-		int temp = getIntTag(aux, "peso");
-		//printf("Got weight = %d from %d to %d\n", temp, from, to);
-		return temp;
-	} else {
-		//printf("No connection!\n");
-		return INF;
+		if (getStrAtt(aux, "nome", dest)) 
+			return 1;
+		return -1;
 	}
-	//node *atual = nos[from];
-	//while (atual != NULL) {
-	//	if (atual->no == to) 
-	//		return atual->peso;
-	//	atual = atual->prox;
-	//}
-	//return INF;
+	
+	printf("Path is invalid!\n");
+	exit(5);
 }
 
 void getNome(xmlNode *raiz, int from, int to, char dest[]) {
@@ -305,22 +246,11 @@ void getNome(xmlNode *raiz, int from, int to, char dest[]) {
 	}
 	
 	if (aux) {
-		//return getIntTag(aux, "peso");
 		findTagInParent(aux, "nome", dest);
 	} else {
 		printf("Path is invalid!\n");
 		exit(5);
 	}
-	//node *atual = nos[from];
-	//while (atual != NULL) {
-	//	if (atual->no == to) {
-	//		strcpy(dest, atual->nome);
-	//		return;
-	//	}
-	//	atual = atual->prox;
-	//}
-	//printf("Path invalid!\n");
-	//exit(5); 
 }
 
 void printPath(xmlNode *raiz, int path[MAX], int dest, int peso) {
@@ -343,7 +273,11 @@ void printPath(xmlNode *raiz, int path[MAX], int dest, int peso) {
 
 	int l = 1;
 	while (point > 0) {
-		getNome(raiz, rev[point], rev[point - 1], curr);
+		#ifdef COMPACT_XML
+		cGetNome(raiz, rev[point], rev[point - 1], curr);
+		#else
+		 getNome(raiz, rev[point], rev[point - 1], curr);
+		#endif
 		if (strcmp(curr, last)) {
 			printf("\t\t%d. %s\n", l, curr);
 			l++;
