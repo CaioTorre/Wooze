@@ -46,20 +46,20 @@ function Node:draw(isSelected, n_master, scale)
 end
 
 function Node:isTouched(tx, ty, scale)
-	local w = self.scaleWidth(scale)
-	local h = self.scaleHeight(scale)
+	local w = self:scaleWidth(scale)
+	local h = self:scaleHeight(scale)
 	return (tx > self.x and tx < self.x + w and ty > self.y and ty < self.y + h)
 end
 
 function Node:touchUpperHalf(tx, ty, scale)
-	local w = self.scaleWidth(scale)
-	local h = self.scaleHeight(scale)
+	local w = self:scaleWidth(scale)
+	local h = self:scaleHeight(scale)
 	return (tx > self.x and tx < self.x + w and ty > self.y and ty < self.y + h/2)
 end
 
 function Node:touchLowerHalf(tx, ty, scale)
-	local w = self.scaleWidth(scale)
-	local h = self.scaleHeight(scale)
+	local w = self:scaleWidth(scale)
+	local h = self:scaleHeight(scale)
 	return (tx > self.x and tx < self.x + w and ty > self.y + h/2 and ty < self.y + h)
 end
 
