@@ -27,6 +27,8 @@ void throwErr(xmlError code) {
 		case badAttributeVal:
 			printf("Bad Attribute value");
 			break;
+		case illegalSize:
+			printf("Badly sized string");
 		default:
 			printf("Unknown error code");
 			break;
@@ -77,6 +79,7 @@ int readTag(FILE *xml, char *dest, attribNode **attribs) { //Implement attribute
 		} else {
 			//if (!firstAttrib) { if ( fgetc(xml) != ' ' ) { throwErr(badAttributeTag, "Expected ' '"); } }
 			current = (attribNode*)malloc(sizeof(attribNode));
+			if (!current) { throwErr(noMemory); }
 			if (!first) first = current;
 			
 			if (firstAttrib) {
@@ -89,6 +92,10 @@ int readTag(FILE *xml, char *dest, attribNode **attribs) { //Implement attribute
 				//printf("Appending %c @ %d\n", c, tpointer);
 				current->tag[tpointer++] = c;
 			}
+			if (tpointer >= CTAG) {
+				throwErr(illegalSize, "Wrong tag size for attribute");
+			}
+			
 			//printf("Ending with \\0 @ %d\n", tpointer);
 			current->tag[tpointer] = '\0';
 			
@@ -100,6 +107,11 @@ int readTag(FILE *xml, char *dest, attribNode **attribs) { //Implement attribute
 			while ((c = fgetc(xml)) != '\"') {
 				current->val[tpointer++] = c;
 			}
+			
+			if (tpointer >= CIMD) {
+				throwErr(illegalSize, "Wrong immed size for attribute");
+			}
+			
 			current->val[tpointer] = '\0';
 			
 			if (prev) prev->next = current;
@@ -108,6 +120,11 @@ int readTag(FILE *xml, char *dest, attribNode **attribs) { //Implement attribute
 			firstAttrib = 0;
 		}
 	}
+	
+	if (cpointer >= CTAG) {
+		throwErr(illegalSize, "Wrong tag size for node");
+	}
+			
 	dest[cpointer] = '\0';
 	
 	*attribs = first;
@@ -153,9 +170,11 @@ xmlNode *parseXML(FILE *xml, const char *parentTag, int tabDepth, int *masterClo
 			if (c != '<') { 
 				current->immed[char_pos++] = c;
 				while ((c = fgetc(xml)) != '<') { current->immed[char_pos++] = c; }
-			} //else {
-				//printf("Empty tag\n");
-			//}
+			} 
+			if (char_pos++ >= CIMD) {
+				throwErr(illegalSize, "Wrong immed size for node");
+			}
+			
 			current->immed[char_pos] = '\0';
 			
 			ungetc('<', xml);
@@ -217,13 +236,13 @@ xmlNode *parseXML(FILE *xml, const char *parentTag, int tabDepth, int *masterClo
 			} //else
 			
 			//if (!(*masterClose)) {
-				xmlNode *nextNode = createNewNode();
-				
-				current->next = nextNode;
-				current = nextNode;
-				current->attributes = attribs;
-				
-				strcpy(current->tag, current_tag);
+			xmlNode *nextNode = createNewNode();
+			
+			current->next = nextNode;
+			current = nextNode;
+			current->attributes = attribs;
+			
+			strcpy(current->tag, current_tag);
 			//}
 		//} else {
 			//return first;

@@ -9,13 +9,12 @@
 #include "Logger.h"
 #include "Parser.h"
 
-#define MAX 10
-#define INF 999
+#define INF 9999
 #define NAOMEMBRO 0
 #define MEMBRO 1
 
-#define NNOS 50
-#define MAX_NOME 30
+#define NNOS 43
+#define MAX_NOME 60
 
 void dij(xmlNode *raiz, int orig, int dest, int path[], int *pd);
 
@@ -24,13 +23,13 @@ void getNome(xmlNode *raiz, int from, int to, char dest[]);
 int cGetPeso(xmlNode *raiz, int from, int to);
 int cGetNome(xmlNode *raiz, int from, int to, char dest[]);
 
-void printPath(xmlNode *raiz, int path[MAX], int dest, int peso);
+void printPath(xmlNode *raiz, int path[NNOS], int dest, int peso);
 
 int main(int argc, char *argv[]) {
-	#ifdef COMPACT_XML
-		printf("Using newest compact-style XML file\n");
-	#endif
 	Logger l;
+	#ifdef COMPACT_XML
+		l.logString("Using newest compact-style XML file\n", config);
+	#endif
 	if (argc > 1) {
 		int lv;
 		sscanf(argv[1], "%d", &lv);
@@ -51,6 +50,8 @@ int main(int argc, char *argv[]) {
 	while (aux) {
 		findTagInParent(aux, "nome", buffer);
 		if (strcmp(buffer, "NULL")) {
+			sprintf(l.buffer, "Adding node (%s)...", buffer);
+			l.logB(config);
 			strcpy(aliases[POIs], buffer);
 			findTagInParent(aux, "id", buffer);
 			sscanf(buffer, "%d", &(idalias[POIs++]));
@@ -63,6 +64,8 @@ int main(int argc, char *argv[]) {
 	while (aux) {
 		getStrAtt(aux, "nome", buffer);
 		if (strcmp(buffer, "NULL")) {
+			sprintf(l.buffer, "Adding node (%s)...", buffer);
+			l.logB(config);
 			strcpy(aliases[POIs], buffer);
 			idalias[POIs++] = getIntAtt(aux, "id");
 		}
@@ -70,7 +73,7 @@ int main(int argc, char *argv[]) {
 	}
 	#endif
 	
-	int path[MAX];
+	int path[NNOS];
 	int pesoTotal;
 
 	int orig = 0;
@@ -99,7 +102,7 @@ int main(int argc, char *argv[]) {
 
 	dij(raiz, orig, dest, path, &pesoTotal);
 
-	l.logString("Dijstra is done!", config);
+	l.logString("Dijkstra is done!", config);
 	printPath(raiz, path, dest, pesoTotal);
 
 	#ifndef LINUX
@@ -109,12 +112,12 @@ int main(int argc, char *argv[]) {
 }
 
 void dij(xmlNode *raiz, int orig, int dest, int path[], int *pd) {
-	int dist[MAX];
+	int dist[NNOS];
 	int corrente, i, k = 0, dc;
-	int perm[MAX];
+	int perm[NNOS];
 	int menordist, novadist;
 	
-	for (i = 0; i < MAX; i++) {
+	for (i = 0; i < NNOS; i++) {
 		perm[i] = NAOMEMBRO;
 		dist[i] = INF;
 		path[i] = -1;
@@ -127,7 +130,7 @@ void dij(xmlNode *raiz, int orig, int dest, int path[], int *pd) {
 	while (corrente != dest) {
 		menordist = INF;
 		dc = dist[corrente];
-		for (i = 0; i < MAX; i++) {
+		for (i = 0; i < NNOS; i++) {
 			if (perm[i] == NAOMEMBRO) {
 				#ifdef COMPACT_XML
 				novadist = dc + cGetPeso(raiz, corrente, i);
@@ -135,43 +138,59 @@ void dij(xmlNode *raiz, int orig, int dest, int path[], int *pd) {
 				novadist = dc +  getPeso(raiz, corrente, i);
 				#endif
 				if (novadist < dist[i]) {
+					//printf("Updating dist for %d\n", i);
 					dist[i] = novadist;
 					path[i] = corrente;
 				}
 				if (dist[i] < menordist) {
+					//printf("Got smaller distance for %d\n", i);
 					menordist = dist[i];
 					k = i;
 				}
 			}
 		}
+		//printf("K is %d\n", k);
 		corrente = k;
 		perm[corrente] = MEMBRO;
 	}
+	//printf("Loop finished (arrived)\n");
 	*pd = dist[dest];
 }
 
 int cGetPeso(xmlNode *raiz, int from, int to) {
+	//printf("Fetching weight from %d to %d\n", from, to);
 	xmlNode *aux = raiz;
-	int cfrom, cto;
+	int cfrom = from, cto = to;
 	do {
 		cfrom = getIntAtt(aux, "id");
 		if (cfrom != from) aux = aux->next; 
 	} while (aux && cfrom != from);
 	
+	//printf("Found correct origin id...\n");
+	
 	aux = aux->inside; //Get first road
-	if (!aux) return INF; //If there are no roads starting at 'from'
+	if (!aux) {
+		//printf("No roads starting at %d!\n", from);
+		return INF; //If there are no roads starting at 'from'
+	}
 	
 	do {
 		cto = getIntAtt(aux, "id");
 		if (cto != to) aux = aux->next;
 	} while (aux && cto != to);
 	
+	
 	if (aux) {
+		//printf("Found correct destination id...\n");
 		int attempt = getIntAtt(aux, "peso");
-		if (attempt >= 0) { return attempt; }
+		if (attempt >= 0) { 
+			//printf("Got w=%d from %d to %d\n", attempt, from, to); 
+			return attempt; 
+		}
 		printf("Got a negative weight (probably a failed get)");
 		return INF;
 	}
+	//printf("No direct path!\n");
 	//printf("No aux\n");
 	return INF;
 }
@@ -247,8 +266,8 @@ void getNome(xmlNode *raiz, int from, int to, char dest[]) {
 	}
 }
 
-void printPath(xmlNode *raiz, int path[MAX], int dest, int peso) {
-	int rev[MAX + 1];
+void printPath(xmlNode *raiz, int path[NNOS], int dest, int peso) {
+	int rev[NNOS + 1];
 	int point = 1;
 
 	char curr[MAX_NOME];

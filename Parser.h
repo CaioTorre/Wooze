@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 
-#define CTAG 20
-#define CIMD 30
+#define CTAG 10
+#define CIMD 60
 
-enum xmlError { fileNotFound = 1, noMemory, wrongIndentation, wrongTag, badAttributeTag, badAttributeVal, noSuchAttribute };
+enum xmlError { fileNotFound = 1, noMemory, wrongIndentation, wrongTag, badAttributeTag, badAttributeVal, noSuchAttribute, illegalSize };
 enum xmlNodeType { parent = 0, immediate };
 
 struct at {
