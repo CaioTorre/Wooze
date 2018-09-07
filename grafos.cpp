@@ -27,9 +27,6 @@ void printPath(xmlNode *raiz, int path[NNOS], int dest, int peso);
 
 int main(int argc, char *argv[]) {
 	Logger l;
-	#ifdef COMPACT_XML
-		l.logString("Using newest compact-style XML file\n", config);
-	#endif
 	if (argc > 1) {
 		int lv;
 		sscanf(argv[1], "%d", &lv);
@@ -37,6 +34,10 @@ int main(int argc, char *argv[]) {
 	} else {
 		l.setLevel(info);
 	}
+	
+	#ifdef COMPACT_XML
+		l.logString("Using newest compact-style XML file\n", config);
+	#endif
 	
 	char aliases[NNOS][MAX_NOME];
 	int  idalias[NNOS];
