@@ -33,3 +33,5 @@
 
 # Privates
 *.xml
+*.jpeg
+!db.xml

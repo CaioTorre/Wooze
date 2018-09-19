@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF8">
+	<node id="1" nome="Ponto 1">
+		<rua id="22" peso="100" nome="Rua dos Cambarás"></rua>
+	</node>
+	<node id="2" nome="Ponto 2">
+		<rua id="21" peso="50" nome="Rua Maria Edna Vilagelin Zaki"></rua>
+	</node>
+	<node id="3" nome="Ponto 3">
+		<rua id="23" peso="50" nome="Rua dos Salgueiros"></rua>
+		<rua id="26" peso="100" nome="Rua dos Salgueiros"></rua>
+	</node>
+	<node id="4" nome="Ponto 4">
+		<rua id="14" peso="100" nome="Rua dos Angelins"></rua>
+		<rua id="27" peso="150" nome="Rua dos Angelins"></rua>
+	</node>
+	<node id="5" nome="Ponto 5">
+		<rua id="15" peso="150" nome="Rua das Sapucáias"></rua>
+		<rua id="28" peso="100" nome="Rua das Sapucáias"></rua>
+	</node>
+	<node id="6" nome="Ponto 6">
+		<rua id="17" peso="150" nome="Rua dos Vinháticos"></rua>
+		<rua id="30" peso="100" nome="Rua dos Vinháticos"></rua>
+	</node>
+	<node id="7" nome="Ponto 7">
+		<rua id="19" peso="150" nome="Rua das Guajuviras"></rua>
+		<rua id="33" peso="50" nome="Rua das Guajuviras"></rua>
+	</node>
+	<node id="8" nome="Ponto 8">
+		<rua id="37" peso="50" nome="Rua das Grevíleas"></rua>
+		<rua id="38" peso="100" nome="Rua das Grevíleas"></rua>
+	</node>
+	<node id="9" nome="Ponto 9">
+		<rua id="45" peso="100" nome="Rua Umberto Aveniente"></rua>
+		<rua id="46" peso="50" nome="Rua Umberto Aveniente"></rua>
+	</node>
+	<node id="10" nome="Ponto 10">
+		<rua id="42" peso="50" nome="Rua dos Jequitibás"></rua>
+		<rua id="43" peso="50" nome="Rua dos Jequitibás"></rua>
+	</node>
+	<node id="11" nome="NULL">
+		<rua id="12" peso="50" nome="Rua das Acácias"></rua>
+	</node>
+	<node id="12" nome="NULL">
+		<rua id="1" peso="50" nome="Rua dos Cambarás"></rua>
+		<rua id="13" peso="50" nome="Rua das Acácias"></rua>
+	</node>
+	<node id="13" nome="NULL">
+		<rua id="23" peso="150" nome="Rua dos Salgueiros"></rua>
+		<rua id="14" peso="50" nome="Rua das Acácias"></rua>
+	</node>
+	<node id="14" nome="NULL">
+		<rua id="4" peso="100" nome="Rua dos Angelins"></rua>
+		<rua id="15" peso="50" nome="Rua das Acácias"></rua>
+	</node>
+	<node id="15" nome="NULL">
+		<rua id="5" peso="150" nome="Rua das Sapucáias"></rua>
+		<rua id="16" peso="50" nome="Rua das Acácias"></rua>
+	</node>
+	<node id="16" nome="NULL">
+		<rua id="29" peso="150" nome="Rua das Sucupiras"></rua>
+		<rua id="17" peso="50" nome="Rua das Acácias"></rua>
+	</node>
+	<node id="17" nome="NULL">
+		<rua id="6" peso="150" nome="Rua dos Vinháticos"></rua>
+		<rua id="18" peso="50" nome="Rua das acácias"></rua>
+	</node>
+	<node id="18" nome="NULL">
+		<rua id="19" peso="50" nome="Rua das Acácias"></rua>
+		<rua id="31" peso="150" nome="Rua dos Acajus"></rua>
+	</node>
+	<node id="19" nome="NULL">
+		<rua id="7" peso="100" nome="Rua das Guajuviras"></rua>
+	</node>
+	<node id="20" nome="NULL">
+		<rua id="21" peso="50" nome="Rua Niaze Cury Zakia"></rua>
+	</node>
+	<node id="21" nome="NULL">
+		<rua id="20" peso="50" nome="Rua Niaze Cury Zakia"></rua>
+		<rua id="11" peso="150" nome="Rua Maria Edna Vilagelin Zaki"></rua>
+		<rua id="22" peso="50" nome="Rua Niaze Cury Zakia"></rua>
+	</node>
+	<node id="22" nome="NULL">
+		<rua id="25" peso="100" nome="Rua dos Cambarás"></rua>
+		<rua id="21" peso="50" nome="Rua Niaze Cury Zakia"></rua>
+		<rua id="23" peso="50" nome="Rua Niaze Cury Zakia"></rua>
+	</node>
+	<node id="23" nome="NULL">
+		<rua id="3" peso="50" nome="Rua dos Salgueiros"></rua>
+		<rua id="22" peso="50" nome="Rua Niaze Cury Zakia"></rua>
+		<rua id="13" peso="100" nome="Rua dos Salgueiros"></rua>
+	</node>
+	<node id="24" nome="NULL">
+		<rua id="2" peso="100" nome="Rua Maria Edna Vilagelin Zaki"></rua>
+		<rua id="25" peso="50" nome="Rua dos Jacarandás"></rua>
+	</node>
+	<node id="25" nome="NULL">
+		<rua id="24" peso="50" nome="Rua dos Jacarandás"></rua>
+		<rua id="26" peso="50" nome="Rua dos Jacarandás"></rua>
+	</node>
+	<node id="26" nome="NULL">
+		<rua id="25" peso="50" nome="Rua dos Jacarandás"></rua>
+		<rua id="3" peso="100" nome="Rua dos Salgueiros"></rua>
+		<rua id="27" peso="50" nome="Rua dos Jacarandás"></rua>
+	</node>
+	<node id="27" nome="NULL">
+		<rua id="26" peso="50" nome="Rua dos Jacarandás"></rua>
+		<rua id="4" peso="150" nome="Rua dos Angelins"></rua>
+		<rua id="28" peso="50" nome="Rua dos Jacarandás"></rua>
+	</node>
+	<node id="28" nome="NULL">
+		<rua id="5" peso="100" nome="Rua das Sapucáias"></rua>
+		<rua id="27" peso="50" nome="Rua dos Jacarandás"></rua>
+		<rua id="29" peso="50" nome="Rua dos Jacarandás"></rua>
+	</node>
+	<node id="29" nome="NULL">
+		<rua id="28" peso="50" nome="Rua dos jacarandás"></rua>
+		<rua id="16" peso="150" nome="Rua das Sucupiras"></rua>
+		<rua id="30" peso="50" nome="Rua dos Jacarandás"></rua>
+	</node>
+	<node id="30" nome="NULL">
+		<rua id="29" peso="50" nome="Rua dos Jacarandás"></rua>
+		<rua id="31" peso="50" nome="Rua dos Jacarandás"></rua>
+		<rua id="6" peso="100" nome="Rua dos Vinháticos"></rua>
+		<rua id="37" peso="50" nome="Rua dos Vinháticos"></rua>
+	</node>
+	<node id="31" nome="NULL">
+		<rua id="18" peso="150" nome="Rua dos Acajús"></rua>
+		<rua id="32" peso="50" nome="Rua dos Jacarandás"></rua>
+		<rua id="30" peso="50" nome="Rua dos Jacarandás"></rua>
+	</node>
+	<node id="32" nome="NULL">
+		<rua id="31" peso="50" nome="Rua dos Jacarandás"></rua>
+		<rua id="33" peso="50" nome="Rua dos Jacarandás"></rua>
+		<rua id="38" peso="50" nome="Rua das Caneleiras"></rua>
+	</node>
+	<node id="33" nome="NULL">
+		<rua id="32" peso="50" nome="Rua dos Jacarandás"></rua>
+		<rua id="34" peso="50" nome="Rua dos Jacarandás"></rua>
+		<rua id="7" peso="50" nome="Rua das Guajuviras"></rua>
+	</node>
+	<node id="34" nome="NULL">
+		<rua id="33" peso="50" nome="Rua dos Jacarandás"></rua>
+		<rua id="35" peso="50" nome="Rua dos Jacarandás"></rua>
+		<rua id="43" peso="100" nome="Rua das Pindaúvas"></rua>
+	</node>
+	<node id="35" nome="NULL">
+		<rua id="34" peso="50" nome="Rua dos Jacarandás"></rua>
+		<rua id="36" peso="50" nome="Rua dos Jacarandás"></rua>
+	</node>
+	<node id="36" nome="NULL">
+		<rua id="35" peso="50" nome="Rua dos Jacarandás"></rua>
+		<rua id="44" peso="100" nome="Rua dos Eucalíptos"></rua>
+	</node>
+	<node id="37" nome="NULL">
+		<rua id="30" peso="50" nome="Rua dos Vinháticos"></rua>
+		<rua id="39" peso="50" nome="Rua dos Vinháticos"></rua>
+		<rua id="8" peso="50" nome="Rua das Grevileas"></rua>
+	</node>
+	<node id="38" nome="NULL">
+		<rua id="32" peso="50" nome="Rua das Caneleiras"></rua>
+		<rua id="40" peso="50" nome="Rua das Caneleiras"></rua>
+		<rua id="8" peso="100" nome="Rua das Grevileas"></rua>
+	</node>
+	<node id="39" nome="NULL">
+		<rua id="37" peso="50" nome="Rua dos Vinháticos"></rua>
+		<rua id="41" peso="50" nome="Rua dos Vinháticos"></rua>
+		<rua id="40" peso="100" nome="Rua dos Carvalhos"></rua>
+	</node>
+	<node id="40" nome="NULL">
+		<rua id="38" peso="50" nome="Rua das Caneleiras"></rua>
+		<rua id="42" peso="50" nome="Rua das Caneleiras"></rua>
+		<rua id="39" peso="100" nome="Rua dos Carvalhos"></rua>
+	</node>
+	<node id="41" nome="NULL">
+		<rua id="39" peso="50" nome="Rua dos Vinháticos"></rua>
+		<rua id="42" peso="100" nome="Rua dos Jequitibás"></rua>
+	</node>
+	<node id="42" nome="NULL">
+		<rua id="10" peso="50" nome="Rua dos Jequitibás"></rua>
+		<rua id="41" peso="100" nome="Rua dos Jequitibás"></rua>
+		<rua id="40" peso="50" nome="Rua das Caneleiras"></rua>
+		<rua id="46" peso="50" nome="Rua das Caneleiras"></rua>
+	</node>
+	<node id="43" nome="NULL">
+		<rua id="10" peso="50" nome="Rua dos jequitibás"></rua>
+		<rua id="34" peso="100" nome="Rua das Pindauvas"></rua>
+		<rua id="47" peso="50" nome="Rua das Pindauvas"></rua>
+		<rua id="44" peso="50" nome="Rua dos Jequitibás"></rua>
+	</node>
+	<node id="44" nome="NULL">
+		<rua id="43" peso="50" nome="Rua dos Jequitibás"></rua>
+		<rua id="36" peso="100" nome="Rua dos Eucalíptos"></rua>
+	</node>
+	<node id="45" nome="NULL">
+		<rua id="9" peso="100" nome="Rua Umberto Aveniente"></rua>
+	</node>
+	<node id="46" nome="NULL">
+		<rua id="42" peso="50" nome="Rua das Caneleiras"></rua>
+		<rua id="9" peso="50" nome="Rua Umberto Aveniente"></rua>
+		<rua id="47" peso="50" nome="Rua Umberto Aveniente"></rua>
+	</node>
+	<node id="47" nome="NULL">
+		<rua id="46" peso="50" nome="Rua Umberto Aveniente"></rua>
+		<rua id="43" peso="50" nome="Rua das Pindaúvas"></rua>
+	</node>

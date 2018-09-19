@@ -9,11 +9,11 @@
 #include "Logger.h"
 #include "Parser.h"
 
-#define INF 9999
+#define INF 99999
 #define NAOMEMBRO 0
 #define MEMBRO 1
 
-#define NNOS 43
+#define NNOS 47
 #define MAX_NOME 60
 
 void dij(xmlNode *raiz, int orig, int dest, int path[], int *pd);
@@ -192,7 +192,6 @@ int cGetPeso(xmlNode *raiz, int from, int to) {
 		return INF;
 	}
 	//printf("No direct path!\n");
-	//printf("No aux\n");
 	return INF;
 }
 
@@ -292,6 +291,7 @@ void printPath(xmlNode *raiz, int path[NNOS], int dest, int peso) {
 		#else
 		 getNome(raiz, rev[point], rev[point - 1], curr);
 		#endif
+
 		if (strcmp(curr, last)) {
 			printf("\t\t%d. %s\n", l, curr);
 			l++;
