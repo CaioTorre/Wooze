@@ -274,7 +274,7 @@ void printPath(xmlNode *raiz, int path[NNOS], int dest, int peso) {
 	char last[MAX_NOME];
 	
 	int i = 0;
-	printf("\n\tCaminho de menor peso (%d)\n", peso);
+	printf("\n\tCaminho de menor peso (%dm)\n", peso);
 	rev[0] = dest;
 	i = dest;
 	while (path[i] != -1) {
@@ -285,19 +285,39 @@ void printPath(xmlNode *raiz, int path[NNOS], int dest, int peso) {
 	point--;
 
 	int l = 1;
+	int first = 1;
+	int sum = 0;
+	
+	#ifdef COMPACT_XML
+	cGetNome(raiz, rev[point], rev[point - 1], last);
+	#else
+	 getNome(raiz, rev[point], rev[point - 1], last);
+	#endif
 	while (point > 0) {
 		#ifdef COMPACT_XML
 		cGetNome(raiz, rev[point], rev[point - 1], curr);
 		#else
 		 getNome(raiz, rev[point], rev[point - 1], curr);
 		#endif
-
 		if (strcmp(curr, last)) {
-			printf("\t\t%d. %s\n", l, curr);
+			printf("\t\t%d. %s por %dm\n", l, last, sum);
+			
 			l++;
+			#ifdef COMPACT_XML
+			sum = cGetPeso(raiz, rev[point], rev[point - 1]);
+			#else
+			sum =  getPeso(raiz, rev[point], rev[point - 1]);
+			#endif
+				
 			strcpy(last, curr);
+		} else {
+			#ifdef COMPACT_XML
+			sum += cGetPeso(raiz, rev[point], rev[point - 1]);
+			#else
+			sum +=  getPeso(raiz, rev[point], rev[point - 1]);
+			#endif
 		}
 		point--;
 	}
-	printf("\n");
+	printf("\t\t%d. %s por %dm\n", l, last, sum);
 }
