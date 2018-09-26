@@ -78,24 +78,41 @@ int main(int argc, char *argv[]) {
 	int pesoTotal;
 
 	int orig = 0;
-	int dest = 9;
+	int dest = 0;
 	
 	int i;
 	printf("\n\tPontos de interesse: \n\n");
 	for (i = 0; i < POIs; i++)
 		printf("\t\t%d. %s\n", i+1, aliases[i]);
 
-	printf("\nDigite a origem:  ");
-	scanf("%i", &orig);
+	do {
+		printf("\nDigite a origem:  ");
+		scanf("%i", &orig);
 	
+		if (orig <= 0 || orig > POIs) {
+			printf("Ponto nao reconhecido...\n");
+		} 
+
+	} while (orig <= 0 || orig > POIs);
+
+	printf("Partindo de %s...\n", aliases[orig - 1]);
+
 	sprintf(l.buffer, "Orig was %d, now is %d", orig, idalias[orig - 1]);
 	l.logB(config);
 	
 	orig = idalias[orig - 1];
 	
-	printf("Digite o destino: ");
-	scanf("%i", &dest);
+	do {
+		printf("Digite o destino: ");
+		scanf("%i", &dest);
 	
+		if (dest <= 0 || dest > POIs) {
+			printf("Ponto nao reconhecido...\n");
+		} 
+	} while (dest <= 0 || dest > POIs);
+
+	printf("Em direcao a %s...\n", aliases[dest - 1]);
+
 	sprintf(l.buffer, "Dest was %d, now is %d", dest, idalias[dest - 1]);
 	l.logB(config);
 	
@@ -287,7 +304,8 @@ void printPath(xmlNode *raiz, int path[NNOS], int dest, int peso) {
 	int l = 1;
 	int first = 1;
 	int sum = 0;
-	
+	int segs = 0;
+
 	#ifdef COMPACT_XML
 	cGetNome(raiz, rev[point], rev[point - 1], last);
 	#else
@@ -300,7 +318,7 @@ void printPath(xmlNode *raiz, int path[NNOS], int dest, int peso) {
 		 getNome(raiz, rev[point], rev[point - 1], curr);
 		#endif
 		if (strcmp(curr, last)) {
-			printf("\t\t%d. %s por %dm\n", l, last, sum);
+			printf("\t\t%d. %s por %dm (%d segmento(s))\n", l, last, sum, segs);
 			
 			l++;
 			#ifdef COMPACT_XML
@@ -309,6 +327,7 @@ void printPath(xmlNode *raiz, int path[NNOS], int dest, int peso) {
 			sum =  getPeso(raiz, rev[point], rev[point - 1]);
 			#endif
 				
+			segs = 1;
 			strcpy(last, curr);
 		} else {
 			#ifdef COMPACT_XML
@@ -316,8 +335,9 @@ void printPath(xmlNode *raiz, int path[NNOS], int dest, int peso) {
 			#else
 			sum +=  getPeso(raiz, rev[point], rev[point - 1]);
 			#endif
+			segs++;
 		}
 		point--;
 	}
-	printf("\t\t%d. %s por %dm\n", l, last, sum);
+	printf("\t\t%d. %s por %dm (%d segmento(s))\n", l, last, sum, segs);
 }
