@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="UTF8">
-	<node id="1" nome="Ponto 1">
+	<node id="1" nome="Casa">
 		<rua id="22" peso="100" nome="Rua dos Cambarás"></rua>
 	</node>
-	<node id="2" nome="Ponto 2">
+	<node id="2" nome="Centro de Saúde">
 		<rua id="21" peso="50" nome="Rua Maria Edna Vilagelin Zakia"></rua>
 	</node>
-	<node id="3" nome="Ponto 3">
+	<node id="3" nome="Restaurante Via Norte">
 		<rua id="23" peso="50" nome="Rua dos Salgueiros"></rua>
 		<rua id="26" peso="100" nome="Rua dos Salgueiros"></rua>
 	</node>
-	<node id="4" nome="Ponto 4">
+	<node id="4" nome="Oficina Trade Center">
 		<rua id="14" peso="100" nome="Rua dos Angelins"></rua>
 		<rua id="27" peso="150" nome="Rua dos Angelins"></rua>
 	</node>
-	<node id="5" nome="Ponto 5">
+	<node id="5" nome="Lanchonete Clube do 7">
 		<rua id="15" peso="150" nome="Rua das Sapucáias"></rua>
 		<rua id="28" peso="100" nome="Rua das Sapucáias"></rua>
 	</node>
-	<node id="6" nome="Ponto 6">
+	<node id="6" nome="Igreja do Nazareno Peniel">
 		<rua id="17" peso="150" nome="Rua dos Vinháticos"></rua>
 		<rua id="30" peso="100" nome="Rua dos Vinháticos"></rua>
 	</node>
-	<node id="7" nome="Ponto 7">
+	<node id="7" nome="Mercado Denardi">
 		<rua id="19" peso="150" nome="Rua das Guajuviras"></rua>
 		<rua id="33" peso="50" nome="Rua das Guajuviras"></rua>
 	</node>
-	<node id="8" nome="Ponto 8">
+	<node id="8" nome="Padaria Bandeirantes">
 		<rua id="37" peso="50" nome="Rua das Grevíleas"></rua>
 		<rua id="38" peso="100" nome="Rua das Grevíleas"></rua>
 	</node>
-	<node id="9" nome="Ponto 9">
+	<node id="9" nome="Bar do Geraldo">
 		<rua id="45" peso="100" nome="Rua Umberto Aveniente"></rua>
 		<rua id="46" peso="50" nome="Rua Umberto Aveniente"></rua>
 	</node>
-	<node id="10" nome="Ponto 10">
+	<node id="10" nome="Bar do Joaquim">
 		<rua id="42" peso="50" nome="Rua dos Jequitibás"></rua>
 		<rua id="43" peso="50" nome="Rua dos Jequitibás"></rua>
 	</node>
