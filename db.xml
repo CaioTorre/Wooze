@@ -3,7 +3,7 @@
 		<rua id="22" peso="100" nome="Rua dos Cambarás"></rua>
 	</node>
 	<node id="2" nome="Ponto 2">
-		<rua id="21" peso="50" nome="Rua Maria Edna Vilagelin Zaki"></rua>
+		<rua id="21" peso="50" nome="Rua Maria Edna Vilagelin Zakia"></rua>
 	</node>
 	<node id="3" nome="Ponto 3">
 		<rua id="23" peso="50" nome="Rua dos Salgueiros"></rua>
@@ -62,7 +62,7 @@
 	</node>
 	<node id="17" nome="NULL">
 		<rua id="6" peso="150" nome="Rua dos Vinháticos"></rua>
-		<rua id="18" peso="50" nome="Rua das acácias"></rua>
+		<rua id="18" peso="50" nome="Rua das Acácias"></rua>
 	</node>
 	<node id="18" nome="NULL">
 		<rua id="19" peso="50" nome="Rua das Acácias"></rua>
@@ -76,7 +76,7 @@
 	</node>
 	<node id="21" nome="NULL">
 		<rua id="20" peso="50" nome="Rua Niaze Cury Zakia"></rua>
-		<rua id="11" peso="150" nome="Rua Maria Edna Vilagelin Zaki"></rua>
+		<rua id="11" peso="150" nome="Rua Maria Edna Vilagelin Zakia"></rua>
 		<rua id="22" peso="50" nome="Rua Niaze Cury Zakia"></rua>
 	</node>
 	<node id="22" nome="NULL">
@@ -90,7 +90,7 @@
 		<rua id="13" peso="100" nome="Rua dos Salgueiros"></rua>
 	</node>
 	<node id="24" nome="NULL">
-		<rua id="2" peso="100" nome="Rua Maria Edna Vilagelin Zaki"></rua>
+		<rua id="2" peso="100" nome="Rua Maria Edna Vilagelin Zakia"></rua>
 		<rua id="25" peso="50" nome="Rua dos Jacarandás"></rua>
 	</node>
 	<node id="25" nome="NULL">
@@ -113,7 +113,7 @@
 		<rua id="29" peso="50" nome="Rua dos Jacarandás"></rua>
 	</node>
 	<node id="29" nome="NULL">
-		<rua id="28" peso="50" nome="Rua dos jacarandás"></rua>
+		<rua id="28" peso="50" nome="Rua dos Jacarandás"></rua>
 		<rua id="16" peso="150" nome="Rua das Sucupiras"></rua>
 		<rua id="30" peso="50" nome="Rua dos Jacarandás"></rua>
 	</node>
@@ -182,7 +182,7 @@
 		<rua id="46" peso="50" nome="Rua das Caneleiras"></rua>
 	</node>
 	<node id="43" nome="NULL">
-		<rua id="10" peso="50" nome="Rua dos jequitibás"></rua>
+		<rua id="10" peso="50" nome="Rua dos Jequitibás"></rua>
 		<rua id="34" peso="100" nome="Rua das Pindauvas"></rua>
 		<rua id="47" peso="50" nome="Rua das Pindauvas"></rua>
 		<rua id="44" peso="50" nome="Rua dos Jequitibás"></rua>
