@@ -318,7 +318,7 @@ void printPath(xmlNode *raiz, int path[NNOS], int dest, int peso) {
 		 getNome(raiz, rev[point], rev[point - 1], curr);
 		#endif
 		if (strcmp(curr, last)) {
-			printf("\t\t%d. %s por %dm (%d segmento(s))\n", l, last, sum, segs);
+			printf("\t\t%d. %s por %dm (%d segmento%c)\n", l, last, sum, segs, (segs == 1 ? '\0' : 's'));
 			
 			l++;
 			#ifdef COMPACT_XML
@@ -339,5 +339,5 @@ void printPath(xmlNode *raiz, int path[NNOS], int dest, int peso) {
 		}
 		point--;
 	}
-	printf("\t\t%d. %s por %dm (%d segmento(s))\n", l, last, sum, segs);
+	printf("\t\t%d. %s por %dm (%d segmento%c)\n", l, last, sum, segs, (segs == 1 ? '\0' : 's'));
 }
